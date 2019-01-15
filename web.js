@@ -70,4 +70,4 @@ setInterval(() => {
 		}
 	}
 }, 1000 * 60 * 60);
-app.listen(8001, () => console.log('Server started'))
+app.listen(80, () => console.log('Server started'))
