@@ -1,0 +1,15 @@
+{
+  "name": "cellsoftnodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "sendmail": "^1.4.1"
+  }
+}

@@ -1,0 +1,59 @@
+<html>
+
+<head>
+	<title>세팅</title>
+	<script src="./jquery-3.3.1.js"></script>
+	<link rel="stylesheet" href="./css.css">
+</head>
+
+<body>
+	<div class="row">
+		<div class="block">회원 ID</div>
+		<div class="block">사용기간</div>
+		<div class="block">연장</div>
+	</div>
+	<div id='divUser'></div>
+	<script>
+
+		function timestampToDate(unix_timestamp) {
+			var date = new Date(unix_timestamp * 1000);
+			var hours = date.getHours();
+			return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+		}
+
+		function ext(id) {
+			$.getJSON({
+				url: '/set?id=' + id,
+				success: data => {
+					alert('회원 ' + id + '의 사용기간이 연장되었습니다.')
+					reload()
+				}
+			})
+		}
+
+		function reload() {
+			$.getJSON({
+				url: '/data',
+				success: data => {
+					var innerHtml = ''
+
+					var users = data.users
+					for (var i = 0; i < users.length; i++) {
+						console.log(users[i])
+						innerHtml
+							+= '<div class="row">'
+							+ '<div class="block">' + users[i].id + '</div>'
+							+ '<div class="block">' + timestampToDate(users[i].date * 1 + users[i].expireTerm * 60 * 60 * 24) + ' (' + users[i].expireTerm + '일)</div>'
+							+ '<div class="block" onclick=ext("' + users[i].id + '")>연장하기</div>'
+							+ "</div>"
+					}
+					divUser.innerHTML = innerHtml;
+				}
+			})
+		}
+
+		reload()
+	</script>
+</body>
+
+</html>

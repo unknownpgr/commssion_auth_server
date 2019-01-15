@@ -1,0 +1,10 @@
+.row{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.block{
+	width: 200px;
+	text-align: center;
+}
