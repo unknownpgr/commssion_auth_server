@@ -1,1 +1,1 @@
-{"users":[{"id":"test_user_1","pw":"test_pw_1","u":"37GNV-YCQVD-38XP9-T848R-FC2HD","date":1546950114,"expireTerm":30},{"id":"test_user_2","pw":"test_pw_2","date":1546950111,"expireTerm":60},{"id":"Hope5595","pw":"ever0901"}],"meta":{"masterPw":"password"}}
+{"users":[{"id":"test_user_1@naver.com","pw":"test_pw_1","u":"37GNV-YCQVD-38XP9-T848R-FC2HD","date":1547558267,"expireTerm":30},{"id":"test_user_2@naver.com","pw":"test_pw_2","date":1546950111,"expireTerm":60},{"id":"Hope5595@gmail.com","pw":"ever0901","expireTerm":15,"date":1547558808}],"meta":{"masterPw":"password"}}

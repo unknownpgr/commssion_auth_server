@@ -7,12 +7,33 @@
 </head>
 
 <body>
-	<div class="row">
-		<div class="block">회원 ID</div>
-		<div class="block">사용기간</div>
-		<div class="block">연장</div>
+	<div id="header">회원 관리 페이지</div>
+	<div id="top">
+		<button onclick="location.href='/logout'">로그아웃</button>
 	</div>
-	<div id='divUser'></div>
+	<div id="center">
+		<div class="row">
+			<div class="block colomnName">회원 ID(이메일)</div>
+			<div class="block colomnName">사용기간</div>
+			<div class="block colomnName">연장</div>
+			<div class="block colomnName">삭제</div>
+		</div>
+		<div id='divUser'></div>
+		<div id="sep"></div>
+		<div id="labeladd">회원 추가</div>
+		<div>
+			<span class="label">ID(이메일)</span>
+			<input type="text" id="input_id">
+			<br>
+			<span class="label">Password</span>
+			<input type="text" id="input_pw">
+			<br>
+			<span class="label">사용기한(일)</span>
+			<input type="number" id="input_exp">
+			<br>
+			<button onclick="addUser()">추가하기</button>
+		</div>
+	</div>
 	<script>
 
 		function timestampToDate(unix_timestamp) {
@@ -25,7 +46,7 @@
 			$.getJSON({
 				url: '/set?id=' + id,
 				success: data => {
-					alert('회원 ' + id + '의 사용기간이 연장되었습니다.')
+					if (data) alert('회원 ' + id + '의 사용기간이 연장되었습니다.')
 					reload()
 				}
 			})
@@ -41,16 +62,50 @@
 					for (var i = 0; i < users.length; i++) {
 						console.log(users[i])
 						innerHtml
-							+= '<div class="row">'
+							+= '<div class="row itemRow">'
 							+ '<div class="block">' + users[i].id + '</div>'
-							+ '<div class="block">' + timestampToDate(users[i].date * 1 + users[i].expireTerm * 60 * 60 * 24) + ' (' + users[i].expireTerm + '일)</div>'
+							+ '<div class="block">' + (users[i].date ? (timestampToDate(users[i].date * 1 + users[i].expireTerm * 60 * 60 * 24)) : '데이터 없음') + ' (' + users[i].expireTerm + '일)</div>'
 							+ '<div class="block" onclick=ext("' + users[i].id + '")>연장하기</div>'
+							+ '<div class="block" onclick=rmUser("' + users[i].id + '")>삭제하기</div>'
 							+ "</div>"
 					}
 					divUser.innerHTML = innerHtml;
 				}
 			})
 		}
+
+		function addUser() {
+			var url = '/add?id=' + input_id.value + '&pw=' + input_pw.value + '&expireTerm=' + input_exp.value
+			console.log(url)
+			$.getJSON({
+				url: url,
+				success: data => {
+					if (data.success) alert('회원 추가를 성공했습니다.')
+					else return alert('회원 추가에 실패했습니다. 에러 : ' + data.message)
+					reload()
+					input_id.value = input_pw.value = input_exp.value = ''
+				}
+			})
+		}
+
+		function rmUser(id) {
+
+			if (!confirm("정말로 유저 " + id + "를 삭제하시겠습니까?")) return
+
+			var url = '/rm?id=' + id
+			console.log(url)
+			$.getJSON({
+				url: url,
+				success: data => {
+					if (data.success) alert('회원 삭제를 성공했습니다.')
+					else return alert('회원 삭제에 실패했습니다. 에러 : ' + data.message)
+					reload()
+					input_id_rm.value = ''
+				}
+			})
+
+		}
+
 
 		reload()
 	</script>

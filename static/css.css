@@ -1,3 +1,7 @@
+body{
+	margin: 0px;
+}
+
 .row{
 	display: flex;
 	flex-direction: row;
@@ -7,4 +11,52 @@
 .block{
 	width: 200px;
 	text-align: center;
+}
+
+#header{
+	text-align: center;
+	background-color: #eee;
+	font-size: 200%;
+	padding-top :32px;
+	padding-bottom: 32px;
+}
+
+#top{
+	margin-top: 32px;
+	text-align: right;
+	padding-right: 32px;
+}
+
+#center{
+	margin-top: 32px;
+	padding-left: 32px;
+	padding-right: 32px;
+}
+
+#labeladd{
+	margin-top: 32px;
+}
+
+.label{
+	display: inline-block;
+	width:100px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+#sep{
+	width: 100%;
+	height: 1px;
+	margin-top: 32px;
+	background-color: #888;
+}
+
+.colomnName{
+	background-color: #ddd;
+	padding: 4px;
+	margin: 8px;
+}
+
+.itemRow{
+	margin-top: 16px;
 }
