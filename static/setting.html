@@ -13,7 +13,11 @@
 	</div>
 	<div id="center">
 		<div class="row">
+			<div class="block colomnName">회원번호</div>
 			<div class="block colomnName">회원 ID(이메일)</div>
+			<div class="block colomnName">이름</div>
+			<div class="block colomnName">연락처</div>
+			<div class="block colomnName">비밀번호</div>
 			<div class="block colomnName">사용기간</div>
 			<div class="block colomnName">연장</div>
 			<div class="block colomnName">삭제</div>
@@ -22,6 +26,12 @@
 		<div id="sep"></div>
 		<div id="labeladd">회원 추가</div>
 		<div>
+			<span class="label">이름</span>
+			<input type="text" id="input_name">
+			<br>
+			<span class="label">전화번호</span>
+			<input type="text" id="input_phone">
+			<br>
 			<span class="label">ID(이메일)</span>
 			<input type="text" id="input_id">
 			<br>
@@ -36,22 +46,6 @@
 	</div>
 	<script>
 
-		function timestampToDate(unix_timestamp) {
-			var date = new Date(unix_timestamp * 1000);
-			var hours = date.getHours();
-			return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-		}
-
-		function ext(id) {
-			$.getJSON({
-				url: '/set?id=' + id,
-				success: data => {
-					if (data) alert('회원 ' + id + '의 사용기간이 연장되었습니다.')
-					reload()
-				}
-			})
-		}
-
 		function reload() {
 			$.getJSON({
 				url: '/data',
@@ -63,7 +57,15 @@
 						console.log(users[i])
 						innerHtml
 							+= '<div class="row itemRow">'
+							+ '<div class="block">' + (i + 1) + '</div>'
 							+ '<div class="block">' + users[i].id + '</div>'
+							+ '<div class="block">' + users[i].name + '</div>'
+							+ '<div class="block">' + users[i].phone + '</div>'
+							+ '<div class="block" onclick=seepw("' + users[i].pw + '")>' + (x => {
+								var o = ''
+								for (var k = 0; k < x.length; k++)o += '*'
+								return o
+							})(users[i].pw) + '</div>'
 							+ '<div class="block">' + (users[i].date ? (timestampToDate(users[i].date * 1 + users[i].expireTerm * 60 * 60 * 24)) : '데이터 없음') + ' (' + users[i].expireTerm + '일)</div>'
 							+ '<div class="block" onclick=ext("' + users[i].id + '")>연장하기</div>'
 							+ '<div class="block" onclick=rmUser("' + users[i].id + '")>삭제하기</div>'
@@ -74,8 +76,34 @@
 			})
 		}
 
+		function timestampToDate(unix_timestamp) {
+			var date = new Date(unix_timestamp * 1000);
+			var hours = date.getHours();
+			return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+		}
+
+		function ext(id) {
+			if (!confirm('회원 ' + id + '의 사용 기간을 연장하시겠습니까?')) return
+			$.getJSON({
+				url: '/set?id=' + id,
+				success: data => {
+					if (data) alert('회원 ' + id + '의 사용기간이 연장되었습니다.')
+					reload()
+				}
+			})
+		}
+
+		function seepw(pw) {
+			alert('비밀번호 : ' + pw)
+		}
+
 		function addUser() {
-			var url = '/add?id=' + input_id.value + '&pw=' + input_pw.value + '&expireTerm=' + input_exp.value
+			var url = '/add?' +
+				'name=' + input_name.value +
+				'&phone=' + input_phone.value +
+				'&id=' + input_id.value +
+				'&pw=' + input_pw.value +
+				'&expireTerm=' + input_exp.value
 			console.log(url)
 			$.getJSON({
 				url: url,
@@ -83,13 +111,17 @@
 					if (data.success) alert('회원 추가를 성공했습니다.')
 					else return alert('회원 추가에 실패했습니다. 에러 : ' + data.message)
 					reload()
-					input_id.value = input_pw.value = input_exp.value = ''
+					input_id.value
+						= input_pw.value
+						= input_exp.value
+						= input_name.value
+						= input_phone.value
+						= ''
 				}
 			})
 		}
 
 		function rmUser(id) {
-
 			if (!confirm("정말로 유저 " + id + "를 삭제하시겠습니까?")) return
 
 			var url = '/rm?id=' + id
@@ -103,9 +135,7 @@
 					input_id_rm.value = ''
 				}
 			})
-
 		}
-
 
 		reload()
 	</script>
