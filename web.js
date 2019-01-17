@@ -9,7 +9,7 @@ let list = JSON.parse(fs.readFileSync(filePath))
 
 const app = express()
 
-const PORT = 80
+const PORT = 81
 
 function getCurrentTime() {
 	return Math.floor(new Date() / 1000)
@@ -55,13 +55,21 @@ app.get('/', (req, res) => {
 	var id = req.query.id
 	var pw = req.query.pw
 	var u = req.query.u
+	console.log('Requested : ' + id + '/' + pw)
 	for (var i = 0; i < list.users.length; i++) {
 		var user = list.users[i]
 		if (user.id == id && user.pw == pw) {
 			console.log('Auth : ' + id + '/' + pw + '/' + u)
 			if (!user.date) list.users[i].date = getCurrentTime()
 			if (!user.u) list.users[i].u = u
-			if (getCurrentTime() - user.date > user.expireTerm || user.u != u) break
+			if (getCurrentTime() - user.date > user.expireTerm * 60 * 60 * 1000) {
+				console.log('err : expire date out')
+				break
+			}
+			if (user.u != u) {
+				console.log('err : u is diffrent')
+				break
+			}
 			return res.send(true)
 		}
 	}
